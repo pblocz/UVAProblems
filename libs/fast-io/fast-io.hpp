@@ -117,6 +117,16 @@ char* rdcstr(char *str){
     return cpy;
 }
 
+/** 
+    Reads a string of characters to a char* string
+*/
+void rdstr(char* buf){
+    int c;
+    while((c=gc())==' ' || c=='\n');
+    do{ *buf++=c; } while(!((c=gc())==' ' || c=='\n')); 
+    ungetc(c,stdin);
+    *buf++='\0';
+}
 
 /* -----------------------------------------------------
    			Writing Methods

@@ -10,40 +10,10 @@
 */
 
 #include <climits>
-#include <cmath>
 #include <cstdio>
-#include <cstdlib>
-#include <cstring>
 
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
-#include <queue>
-#include <stack>
-#include <set>
-#include <map>
 #include <algorithm>
-#include <complex>
-#include <utility>
-#include <limits>
-#include <functional>
 using namespace std;
-
-
-///
-///	DEBUGGING INFORMATION
-/// 
-
-
-#ifdef ONLINE_JUDGE
-	#define dout if(false) cout
-	int dprintf(...){return EOF;}
-#else
-	#define dout cout
-	#define dprintf printf
-#endif
-
 
 ///
 ///	TYPE DEFINITIONS AND OTHERS
@@ -91,6 +61,7 @@ typedef long double LD;
 #define gc getchar
 #define pc putchar
 #define pf printf
+#define sf scanf
 
 template <typename type>
 inline type rdnumber(){
@@ -121,13 +92,57 @@ inline type rdunumber(){
 #define rdul rdunumber<unsigned long>
 #define rdull rdunumber<unsigned long long>
 
+void rdstr(char* buf){
+    int c;
+    while((c=gc())==' ' || c=='\n');
+    do{ *buf++=c; } while(!((c=gc())==' ' || c=='\n')); 
+    ungetc(c,stdin);
+    *buf++='\0';
+}
 
 ///
 ///	PROBLEM SOLUTION
 /// 
 
+enum { SIZE=10000};
 
+C names[SIZE][21];
+P(lU,P(lU,U)) lb[SIZE],ub[SIZE];
 
 int main(int argc,char *argv[]){
+    I cases=rdui();
+    while(cases--){
+	I N=rdui();
+	SEQ(i,0,N){
+	    rdstr(names[i]);//scanf("%s",names[i]);
+	    lU l=rdul(),u=rdul();
+	    lb[i]=P(lU,P(lU,U)) (l,P(lU,U)(u,i)); 
+	    ub[i]=P(lU,P(lU,U)) (u,P(lU,U)(l,i));
+	}
+	sort(lb,lb+N);
+	sort(ub,ub+N);
+	
+	I q=rdui();
+	while(q--){
+	    lU  p=rdul();		
+	    P(lU,P(lU,U)) *upper=
+		upper_bound(lb,lb+N,P(lU,P(lU,U))
+			    (p,P(lU,U)(UINT_MAX,UINT_MAX))),
+		*lower=lower_bound(ub,ub+N,
+				   P(lU,P(lU,U))(p,P(lU,U)(0,0)));
+	    if(N-(lower-ub)-((lb+N)-upper) == 1)
+		if(lower-ub <= (lb+N)-upper){ //search in lb		    
+		    for(upper--;upper!=lb-1;upper--)
+			if(upper->second.first>=p) break;
+		    puts(names[upper->second.second]);
+		}else{ // search in ub
+		    for(;lower!=ub+N;lower++)
+			if(lower->second.first<=p) break;
+		    puts(names[lower->second.second]);
+		}
+	    else puts("UNDETERMINED");
+	}
+	if(cases) pc('\n');
+    }
     return 0;
 }
